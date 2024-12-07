@@ -6,7 +6,7 @@
 > Recent years have seen a surge in interest in Relational Triple Extraction (RTE) using Large Language Models (LLMs). Despite LLMs' proficiency in various natural language processing tasks, current LLM-based RTE methods fall short in capturing the structure essential to knowledge graph. Several studies have attempted to harness ontology graph, the foundational template of knowledge graph, to assist LLMs in comprehending the structure of knowledge graph. However, the broadness in the description of structure within the prompts constructed by these methods leads to the extraction of triples with a higher rate of hallucinations. To address this, we introduce the \textbf{O}ntology \textbf{G}raph and \textbf{L}LM Fusion method for \textbf{R}elational \textbf{T}riple \textbf{E}xtraction (\textbf{OGLRTE}). Our method enhances LLMs by integrating the ontology graph, enabling the LLMs to discern the intricate structures of knowledge graph. It utilizes a leading relation filter to selectively process the ontology structures relevant to the sentence, which is followed by a triple generator to efficiently extract relational triples with the help of fine-tuned LLMs. This dual-process ensures that information from both the ontology graph and the sentences is comprehensively utilized. Our method surpasses traditional and LLM-based methods in extracting information and mitigating hallucinations, as evidenced by its superior performance on three public datasets: CoNLL04, SciERC and Wikidata-TekGen.
 
 ## Model Architecture
-![Model_architecture](figure/method.pdf)
+![Model_architecture](figure/method.png)
 
 ## How to Run the Code
 1. **Environment**
