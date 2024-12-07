@@ -1,0 +1,6 @@
+.cpk/*.pt
+!.cpk/.gitkeep
+.datasets/*.json
+!.datasets/.gitkeep
+.models/*
+!.models/.gitkeep
