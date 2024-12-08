@@ -28,7 +28,7 @@
 
 4. **Fine-tuned LLM**
 
-    The Fine-tuned LLaMA3.1-Instruction Model of Space Ontology can be downloaded from [this link]().
+    The Fine-tuned LLaMA3.1-Instruction Model of Space Ontology can be downloaded from [this link](). Also, you can use LoRA or other fine-tuning method to get your fine-tuned LLM with the Space Ontology dataset `alpaca_dataset.json`.
 
 5. **Run the Code**
 
