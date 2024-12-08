@@ -27,9 +27,11 @@
     In `datasets` we perpare Space Ontology dataset to assist in running our code. The `alpaca_dataset.json` is for fine-tuning the LLM, and other json file is for relation filter.
 
 4. **Fine-tuned LLM**
+
     The Fine-tuned LLaMA3.1-Instruction Model of Space Ontology can be downloaded from [this link]().
 
 5. **Run the Code**
+
     The params of training can be set in `src/params.py`. After setting the parameters, you can run the code as follows:
 
     ```shell
