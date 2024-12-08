@@ -14,5 +14,5 @@ LLM_MODEL_PATH = '/home/user/project/LLaMA-Factory/models/llama3_lora_sft_spaces
 LSTM_HIDDEN_SIZE = 256
 
 # dataset params
-DATASET_PATH = '/home/user/project/NLP-Series-text-cls/data/spaces/'
+DATASET_PATH = '../datasets/spaces/'
 MAX_LABEL_SIZE = 7
