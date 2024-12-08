@@ -8,7 +8,7 @@
 ## Model Architecture
 ![Model_architecture](figure/method.png)
 
-## How to Run the Code
+## Usage
 1. **Environment**
 
     ```shell
