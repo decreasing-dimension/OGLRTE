@@ -10,12 +10,12 @@
 
 ## How to Run the Code
 1. **Environment**
-```shell
-  conda create -n your_env_name python=3.11
-  conda activate your_env_name
-  cd OGLRTE
-  pip install -r requirements.txt
-```
+    ```shell
+    conda create -n your_env_name python=3.11
+    conda activate your_env_name
+    cd OGLRTE
+    pip install -r requirements.txt
+    ```
 
 2. **The pre-trained BERT**
 
