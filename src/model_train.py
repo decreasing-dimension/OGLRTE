@@ -1,6 +1,6 @@
 import torch
 import numpy as np
-from sklearn.metrics import accuracy_score, f1_score, classification_report
+from sklearn.metrics import precision_recall_fscore_support, f1_score, precision_score, recall_score
 from transformers import AutoTokenizer
 import transformers
 import params
@@ -215,7 +215,7 @@ if __name__ == '__main__':
         print('No GPU available, using the CPU instead.')
         device = torch.device("cpu")
     
-    training_loader, validation_loader, ontology = data_loader(params.DATASET_PATH, device)
+    training_loader, validation_loader, ontology = data_loader(params.DATASET_PATH + "train_dataset.json", params.DATASET_PATH + "val_dataset.json", device)
     
     model = OGLRTE(len(ontology["nodes"]))
     model.to(device)
@@ -227,18 +227,16 @@ if __name__ == '__main__':
                                 optimizer, checkpoint_path, best_model, ontology)
     
     val_predicts = (np.array(val_outputs) >= 0.5).astype(int)
-    accuracy = accuracy_score(val_targets, val_predicts)
-    f1_score_micro = f1_score(val_targets, val_predicts, average='micro')
-    f1_score_macro = f1_score(val_targets, val_predicts, average='macro')
+    rel_prec, rel_rec, rel_f1, _ = precision_recall_fscore_support(val_targets, val_predicts, average='micro')
     prec = final_all[0] / (final_all[0] + final_all[1]) if final_all[0] + final_all[1] != 0 else 0
     rec = final_all[0] / (final_all[0] + final_all[2]) if final_all[0] + final_all[2] != 0 else 0
     f1 = 2 * prec * rec / (prec + rec) if prec + rec != 0 else 0
-    print("Relation filtering results:")
-    print(f"Accuracy Score = {accuracy}")
-    print(f"F1 Score (Micro) = {f1_score_micro}")
-    print(f"F1 Score (Macro) = {f1_score_macro}")
-    print(classification_report(val_targets, val_predicts))
-    print("Final results")
+    print("Relation filter results:")
+    print(f"Predicted Score = {rel_prec}")
+    print(f"Recall Score = {rel_prec}")
+    print(f"F1 Score = {rel_f1}")
+    print()
+    print("RTE results:")
     print(f"Predicted Score = {prec}")
     print(f"Recall Score = {rec}")
     print(f"f1 Score = {f1}")

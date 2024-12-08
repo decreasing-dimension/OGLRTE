@@ -12,6 +12,7 @@ BERT_HIDDEN_LAYER_SIZE = 1024
 LLM_MODEL_PATH = '/home/user/project/LLaMA-Factory/models/llama3_lora_sft_spaces'
 # model params
 LSTM_HIDDEN_SIZE = 256
+GCN_HIDDEN_SIZE = 2048
 
 # dataset params
 DATASET_PATH = '../datasets/spaces/'

@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import transformers
 import math
 
-from params import BERT_MODEL_PATH,  BERT_HIDDEN_LAYER_SIZE, MAX_LABEL_SIZE, LSTM_HIDDEN_SIZE, MAX_LEN
+from params import BERT_MODEL_PATH,  BERT_HIDDEN_LAYER_SIZE, MAX_LABEL_SIZE, LSTM_HIDDEN_SIZE, MAX_LEN, GCN_HIDDEN_SIZE
 
 class Chomp1d(torch.nn.Module):
     def __init__(self, chomp_size):
@@ -168,11 +168,11 @@ class OGLRTE(torch.nn.Module):
         self.node_num = node_num
         self.l1 = transformers.BertModel.from_pretrained(BERT_MODEL_PATH)
         self.GATLayer = GAT(nfeat=MAX_LEN + 1, nhid=LSTM_HIDDEN_SIZE, nclass=LSTM_HIDDEN_SIZE * 2, dropout=0.2, alpha=0.2, nheads=8)
-        self.GCNLayer = GraphConvolution(MAX_LEN + 1, 2048, bias=False)
-        self.GCNLayer2 = GraphConvolution(2048, 2048, bias=False)
-        self.GCNLayer3 = GraphConvolution(2048, LSTM_HIDDEN_SIZE * 2, bias=False)
+        self.GCNLayer = GraphConvolution(MAX_LEN + 1, GCN_HIDDEN_SIZE, bias=False)
+        self.GCNLayer2 = GraphConvolution(GCN_HIDDEN_SIZE, GCN_HIDDEN_SIZE, bias=False)
+        self.GCNLayer3 = GraphConvolution(GCN_HIDDEN_SIZE, LSTM_HIDDEN_SIZE * 2, bias=False)
         self.relu = torch.nn.LeakyReLU(0.2)
-        self.gat2cls = torch.nn.Linear(LSTM_HIDDEN_SIZE * 2, 1)
+        self.gcn2cls = torch.nn.Linear(LSTM_HIDDEN_SIZE * 2, 1)
         self.dropout = torch.nn.Dropout(0.2)
         
         self.bilstm = torch.nn.LSTM(BERT_HIDDEN_LAYER_SIZE, LSTM_HIDDEN_SIZE, batch_first=True, bidirectional=True, dropout=0.2)
@@ -184,17 +184,11 @@ class OGLRTE(torch.nn.Module):
         
         self.tcn = TemporalConvNet(num_inputs=BERT_HIDDEN_LAYER_SIZE, num_channels=[LSTM_HIDDEN_SIZE * 2, LSTM_HIDDEN_SIZE * 2, LSTM_HIDDEN_SIZE * 2, LSTM_HIDDEN_SIZE * 2, LSTM_HIDDEN_SIZE * 2], \
                                    kernel_size=2, dropout=0.2)
-        self.w_omega2 = torch.nn.Parameter(torch.Tensor(LSTM_HIDDEN_SIZE, LSTM_HIDDEN_SIZE))
-        self.u_omega2 = torch.nn.Parameter(torch.Tensor(LSTM_HIDDEN_SIZE, 1))
-        
-        torch.nn.init.uniform_(self.w_omega2, -0.1, 0.1)
-        torch.nn.init.uniform_(self.u_omega2, -0.1, 0.1)
+
         self.nodecls = torch.nn.Linear(BERT_HIDDEN_LAYER_SIZE, node_num)
         
         self.fc = torch.nn.Linear(LSTM_HIDDEN_SIZE * 2, MAX_LABEL_SIZE)
-        self.joint = torch.nn.Linear(MAX_LABEL_SIZE * 2, MAX_LABEL_SIZE)
 
-        self.direct = torch.nn.Linear(BERT_HIDDEN_LAYER_SIZE, MAX_LABEL_SIZE)
 
     def forward(self, ids, mask, token_type_ids, ontology):
         output_1 = self.l1(ids, attention_mask=mask, token_type_ids=token_type_ids)
@@ -220,8 +214,12 @@ class OGLRTE(torch.nn.Module):
         newbit = newbit.view(batch[0], -1, 1)
         
         nodecls = torch.cat((nodecls, newbit), dim=2)
-        gat_output = self.GATLayer(nodecls, ontology["adj"])
-        gat_output = self.gat2cls(gat_output).squeeze().view(-1, self.node_num)
+        gat_output = self.GCNLayer(nodecls, ontology["adj"])
+        gat_output = self.relu(gat_output)
+        gat_output = self.GCNLayer2(gat_output, ontology["adj"])
+        gat_output = self.relu(gat_output)
+        gat_output = self.GCNLayer3(gat_output, ontology["adj"])
+        gat_output = self.gcn2cls(gat_output).squeeze().view(-1, self.node_num)
         gat_output = gat_output[:, : MAX_LABEL_SIZE]
         
         merge_output = torch.cat((out, out2), dim = 1)
@@ -233,6 +231,7 @@ class OGLRTE(torch.nn.Module):
         scored_x = merge_output * att_score
         feat = torch.sum(scored_x, dim=1)
         feat = self.fc(feat)
+        print(feat.shape)
         
         return self.arg_alpha * feat + (1 - self.arg_alpha) * gat_output
 

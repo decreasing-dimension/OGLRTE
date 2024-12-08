@@ -105,9 +105,9 @@ def build_graph(dataset, device, tokenizer, max_len):
     graph["adj"] = torch.tensor(graph["adj"], dtype=torch.float, device=device)
     return graph
 
-def data_loader(dataset_path, device):
-    dataset_train = json.loads(open(dataset_path + "train_dataset.json", 'r', encoding='utf-8').read())
-    dataset_val = json.loads(open(dataset_path + "val_dataset.json", 'r', encoding='utf-8').read())
+def data_loader(train_dataset_path, valid_dataset_path, device):
+    dataset_train = json.loads(open(train_dataset_path, 'r', encoding='utf-8').read())
+    dataset_val = json.loads(open(valid_dataset_path, 'r', encoding='utf-8').read())
     df_train = {}
     df_val = {}
     df_train = pd.DataFrame({'sentence': dataset_train['sentence'], 'label': dataset_train['label'], "alpaca": dataset_train['alpaca']})

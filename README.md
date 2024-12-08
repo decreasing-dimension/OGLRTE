@@ -10,6 +10,7 @@
 
 ## How to Run the Code
 1. **Environment**
+
     ```shell
     conda create -n your_env_name python=3.11
     conda activate your_env_name
@@ -20,3 +21,18 @@
 2. **The pre-trained BERT**
 
     The pre-trained BERT (bert-large-uncased) can be downloaded from [this link](https://huggingface.co/google-bert/bert-large-uncased). Also, you can manually set the pre-trained BERT model path in `src/params.py`.
+
+3. **Dataset**
+
+    In `datasets` we perpare Space Ontology dataset to assist in running our code. The `alpaca_dataset.json` is for fine-tuning the LLM, and other json file is for relation filter.
+
+4. **Fine-tuned LLM**
+    The Fine-tuned LLaMA3.1-Instruction Model of Space Ontology can be downloaded from [this link]().
+
+5. **Run the Code**
+    The params of training can be set in `src/params.py`. After setting the parameters, you can run the code as follows:
+
+    ```shell
+    cd src
+    python model_train.py
+    ```
