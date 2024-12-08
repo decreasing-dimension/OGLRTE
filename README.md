@@ -19,4 +19,4 @@
 
 2. **The pre-trained BERT**
 
-The pre-trained BERT (bert-large-uncased) can be downloaded from [this link](https://huggingface.co/google-bert/bert-large-uncased). Also, you can manually set the pre-trained BERT model path in `src/params.py`.
+    The pre-trained BERT (bert-large-uncased) can be downloaded from [this link](https://huggingface.co/google-bert/bert-large-uncased). Also, you can manually set the pre-trained BERT model path in `src/params.py`.
