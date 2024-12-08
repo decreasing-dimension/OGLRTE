@@ -221,8 +221,8 @@ if __name__ == '__main__':
     model.to(device)
     optimizer = torch.optim.Adam(params=model.parameters(), lr=params.LEARNING_RATE)
     
-    checkpoint_path = './ckp/current_checkpoint.pt'
-    best_model = './ckp/best_model.pt'
+    checkpoint_path = '../ckp/current_checkpoint.pt'
+    best_model = '../ckp/best_model.pt'
     trained_model = train_model(device, 1, params.EPOCHS, np.Inf, training_loader, validation_loader, model,
                                 optimizer, checkpoint_path, best_model, ontology)
     
