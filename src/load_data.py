@@ -6,7 +6,6 @@ from transformers import BertTokenizer
 
 import params
 
-# Torch数据集导入类
 class CustomDataset(Dataset):
     def __init__(self, dataframe, tokenizer, max_len):
         self.tokenizer = tokenizer
